@@ -1274,7 +1274,14 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 id--;
             }
             Uri uri = Uri.parse(contentStore + "/" + id);
-            this.cordova.getActivity().getContentResolver().delete(uri, null, null);
+
+            // Apply fix attempt to solve Motorola smartphones with Android 12 (G51 and others) crash when taking a picture
+            try {
+                this.cordova.getActivity().getContentResolver().delete(uri, null, null);
+            } catch (Exception ex) {
+                // do nothing
+            }
+
             cursor.close();
         }
     }
